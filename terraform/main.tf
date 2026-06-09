@@ -3,5 +3,5 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "demo" {
-  bucket = "sreelekha-demo-bucket-123456good"
+  bucket = "sreelekha-demo-bucket-123456goods3"
 }
