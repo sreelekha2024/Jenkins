@@ -20,18 +20,28 @@ pipeline {
 
         stage('Terraform Init') {
             steps {  
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-cred']
+                ]) {
               dir('terraform') {
                 sh 'terraform init'
             }
         }
    }
+}
 
         stage('Terraform Plan') {
             steps {
+               withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-cred']
+                ]) {
                 dir('terraform') {
                 sh 'terraform plan -out=tfplan'
             }
         }
+}
 }
         stage('Approval') {
             steps {
@@ -41,10 +51,15 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-cred']
+                ]) {
                 dir('terraform') {
                 sh 'terraform apply -auto-approve tfplan'
             }
           }
        }
+      }
     }
 }
