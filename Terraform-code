@@ -5,12 +5,7 @@ pipeline {
 
     stages {
 
-        stage('Git Checkout') {
-            steps {
-                git branch: 'Jenkins',
-                url: 'https://github.com/sreelekha2024/Jenkins.git'
-            }
-        }
+        
 
         stage('AWS Authentication') {
             steps {
