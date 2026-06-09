@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/your-username/terraform-project.git'
+            }
+        }
+
+        stage('AWS Authentication') {
+            steps {
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds']
+                ]) {
+                    sh 'aws sts get-caller-identity'
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                sh 'terraform plan -out=tfplan'
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input 'Do you want to apply Terraform changes?'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply -auto-approve tfplan'
+            }
+        }
+    }
+}
